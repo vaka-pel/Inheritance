@@ -122,47 +122,31 @@ public:
 		cout << speciality << " " << group << " " << rating << " " << attendance << endl;
 	}
 };
-#define GRADUATE_TAKE_PARAMETERS const std::string& discipline, const std::string& specialization, int course
-#define GRADUATE_GIVE_PARAMETERS discipline, specialization, course
+#define GRADUATE_TAKE_PARAMETERS const std::string& subject
+#define GRADUATE_GIVE_PARAMETERS subject
 
-class Graduate :public Human
+class Graduate :public Student
 {
-	std::string disñipline;
-	std::string specialization;
-	int course;
+	std::string subject;
+	
 public:
-	const std::string& get_discipline()const
+	const std::string& get_subject()const
 	{
-		return disñipline;
+		return subject;
 	}
-	const std::string& get_specialization()const
+	
+	void set_subject(const std::string& subject)
 	{
-		return specialization;
+		this->subject = subject;
 	}
-	int get_course()const
-	{
-		return course;
-	}
-	void set_discipline(const std::string& discipline)
-	{
-		this->disñipline = discipline;
-	}
-	void set_specialization(const std::string& specialization)
-	{
-		this->specialization = specialization;
-	}
-	void set_course(int course)
-	{
-		this->course = course;
-	}
+	
 
 	// Constructors
 	Graduate 
-	(HUMAN_TAKE_PARAMETERS, GRADUATE_TAKE_PARAMETERS):Human(HUMAN_GIVE_PARAMETERS)
+	(HUMAN_TAKE_PARAMETERS, STUDENT_TAKE_PARAMETERS, GRADUATE_TAKE_PARAMETERS)
+		:Student(HUMAN_GIVE_PARAMETERS, STUDENT_GIVE_PARAMETERS)
 	{
-		set_discipline(discipline);
-		set_specialization(specialization);
-		set_course(course);
+		set_subject(subject);
 		cout << "GConstructor:\t" << this << endl;
 	}
 	~Graduate()
@@ -172,8 +156,8 @@ public:
 	 // Methods
 	void info()const
 	{
-		Human::info();
-		cout << disñipline << " " << specialization << " " << course << endl;
+		Student::info();
+		cout << get_subject() << endl;
 	}
 
 };
@@ -223,18 +207,23 @@ public:
 	}
 };
 
+//#define INHERITANCE
+
 void main()
 {
 	setlocale(LC_ALL, "");
+#ifdef INHERITANCE
 	Human human("Montana", "Antonio", 25);
 	human.info();
 
 	Student student("Pincman", "Jessie", 22, "Chemistry", "WW_220", 95, 98);
 	student.info();
 
-	Graduate graduate("Abu", "Garcia", 23, "Biology", "Cardiology", 6);
+	Graduate graduate("Shreder", "Hank", 40, "Criminalistic", "OBN", 40, 50, "How to catch Heisenberg");
 	graduate.info();
 
 	Teacher teacher("White", "Walter", 50, "Chemistry", 25);
 	teacher.info();
+#endif // INHERITANCE
+
 }
