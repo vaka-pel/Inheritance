@@ -3,6 +3,8 @@ using std::cin;
 using std::cout;
 using std::endl;
 
+#define delimiter "\n---------------------------------------------------------\n"
+
 #define HUMAN_TAKE_PARAMETERS const std::string& last_name, const std::string& first_name, int age
 #define HUMAN_GIVE_PARAMETERS last_name,first_name, age
 
@@ -45,14 +47,14 @@ public:
 		set_age(age);
 		cout << "HConstructor:\t" << this << endl;
 	}
-	~Human()
+	virtual ~Human()
 	{
 		cout << "HDestructor:\t" << this << endl;
 
 	}
 
 	// Methods
-	void info()const
+	virtual void info()const
 	{
 		cout << last_name << " " << first_name << " " << age << endl;
 	}
@@ -116,7 +118,7 @@ public:
 	}
 
 	// Methods
-	void info()const
+	void info()const override
 	{
 		Human::info();
 		cout << speciality << " " << group << " " << rating << " " << attendance << endl;
@@ -154,7 +156,7 @@ public:
 		cout << "GDestructor:\t" << this << endl;
 	}
 	 // Methods
-	void info()const
+	void info()const override
 	{
 		Student::info();
 		cout << get_subject() << endl;
@@ -200,15 +202,23 @@ public:
 		cout << " TDestructor:\t" << this << endl;
 	}
 	// Methods
-	void info()const
+	void info()const override
 	{
 		Human::info();
 		cout << speciality << " " << experience << endl;
 	}
 };
 
-//#define INHERITANCE
+class Filename :public std::string 
+{
+	Filename()
+	{
+		this->c_str();
+	}
+};
 
+//#define INHERITANCE
+#define POLYMORPHISM
 void main()
 {
 	setlocale(LC_ALL, "");
@@ -225,5 +235,24 @@ void main()
 	Teacher teacher("White", "Walter", 50, "Chemistry", 25);
 	teacher.info();
 #endif // INHERITANCE
+
+	Human* group[] =
+	{
+		new Student("Pincman", "Jessie", 22, "Chemistry", "WW_220", 95, 98),
+		new Teacher("White", "Walter", 50, "Chemistry", 25),
+		new Graduate("Shreder", "Hank", 40, "Criminalistic", "OBN", 40, 50, "How to catch Heisenberg"),
+		new Student("Vercetty","Tommy", 30, "Theft", "Vice", 98, 99),
+		new Teacher("Diaz", "Ricardo", 50, "Weapons distribution", 20)
+	};
+	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
+	{
+		group[i]->info();
+		cout << delimiter << endl;
+	}
+	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
+	{
+		delete group[i];
+		cout << delimiter << endl;
+	}
 
 }
