@@ -55,16 +55,16 @@ public:
 	}
 
 	// Methods
-	virtual void info()const
+	virtual std::ostream& info(std::ostream& os)const // base class
 	{
-		cout << last_name << " " << first_name << " " << age << endl;
+		return os << last_name << " " << first_name << " " << age << endl;
 	}
 
 };
 
 std::ostream& operator<<(std::ostream& os, const Human& obj)
 {
-	return os << obj.get_last_name() << " " << obj.get_first_name() << " " << obj.get_age();
+	return obj.info(os);
 }
 
 #define STUDENT_TAKE_PARAMETERS const std::string& speciality, const std::string group, double rating, double attendance
@@ -125,52 +125,11 @@ public:
 	}
 
 	// Methods
-	void info()const override
+	std::ostream& info(std::ostream& os)const override
 	{
-		Human::info();
-		cout << speciality << " " << group << " " << rating << " " << attendance << endl;
+		return Human::info(os) << " " << speciality << " " << group << " " << rating << " " << attendance;
 	}
 };
-#define GRADUATE_TAKE_PARAMETERS const std::string& subject
-#define GRADUATE_GIVE_PARAMETERS subject
-
-class Graduate :public Student
-{
-	std::string subject;
-	
-public:
-	const std::string& get_subject()const
-	{
-		return subject;
-	}
-	
-	void set_subject(const std::string& subject)
-	{
-		this->subject = subject;
-	}
-	
-
-	// Constructors
-	Graduate 
-	(HUMAN_TAKE_PARAMETERS, STUDENT_TAKE_PARAMETERS, GRADUATE_TAKE_PARAMETERS)
-		:Student(HUMAN_GIVE_PARAMETERS, STUDENT_GIVE_PARAMETERS)
-	{
-		set_subject(subject);
-		cout << "GConstructor:\t" << this << endl;
-	}
-	~Graduate()
-	{
-		cout << "GDestructor:\t" << this << endl;
-	}
-	 // Methods
-	void info()const override
-	{
-		Student::info();
-		cout << get_subject() << endl;
-	}
-
-};
-
 
 #define TEACHER_TAKE_PARAMETERS const std::string& speciality, int experience
 #define TEACHER_GIVE_PARAMETERS speciality, experience
@@ -209,12 +168,54 @@ public:
 		cout << " TDestructor:\t" << this << endl;
 	}
 	// Methods
-	void info()const override
+	std::ostream& info(std::ostream& os)const override
 	{
-		Human::info();
-		cout << speciality << " " << experience << endl;
+		return Human::info(os) << " " << speciality << " " << experience;
 	}
+	
 };
+
+#define GRADUATE_TAKE_PARAMETERS const std::string& subject
+#define GRADUATE_GIVE_PARAMETERS subject
+
+class Graduate :public Student
+{
+	std::string subject;
+	
+public:
+	const std::string& get_subject()const
+	{
+		return subject;
+	}
+	
+	void set_subject(const std::string& subject)
+	{
+		this->subject = subject;
+	}
+	
+
+	// Constructors
+	Graduate 
+	(HUMAN_TAKE_PARAMETERS, STUDENT_TAKE_PARAMETERS, GRADUATE_TAKE_PARAMETERS)
+		:Student(HUMAN_GIVE_PARAMETERS, STUDENT_GIVE_PARAMETERS)
+	{
+		set_subject(subject);
+		cout << "GConstructor:\t" << this << endl;
+	}
+	~Graduate()
+	{
+		cout << "GDestructor:\t" << this << endl;
+	}
+	 // Methods
+	std::ostream& info(std::ostream& os)const override
+	{
+		
+		return Student::info(os) << " " << get_subject();
+	}
+
+};
+
+
 
 class Filename :public std::string 
 {
@@ -255,7 +256,7 @@ void main()
 	std::ofstream fout("group.txt");
 	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
 	{
-		group[i]->info();
+		group[i]->info(cout);
 		fout << *group[i] << endl;
 		cout << delimiter << endl;
 	}
