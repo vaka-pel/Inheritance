@@ -1,5 +1,6 @@
 #include<iostream>
 #include<fstream>
+#include<string>
 using std::cin;
 using std::cout;
 using std::endl;
@@ -139,8 +140,7 @@ public:
 		this->attendance = attendance;
 	}
 	// Constructors
-	Student
-		(HUMAN_TAKE_PARAMETERS,STUDENT_TAKE_PARAMETERS):Human(HUMAN_GIVE_PARAMETERS)
+	Student(HUMAN_TAKE_PARAMETERS,STUDENT_TAKE_PARAMETERS):Human(HUMAN_GIVE_PARAMETERS)
 	{
 		set_speciality(speciality);
 		set_group(group);
@@ -197,8 +197,7 @@ public:
 		this->experience = experience;
 	}
 	// Constructors
-	Teacher
-	(HUMAN_TAKE_PARAMETERS, TEACHER_TAKE_PARAMETERS):Human(HUMAN_GIVE_PARAMETERS)
+	Teacher(HUMAN_TAKE_PARAMETERS, TEACHER_TAKE_PARAMETERS):Human(HUMAN_GIVE_PARAMETERS)
 	{
 		set_speciality(speciality);
 		set_experience(experience);
@@ -259,22 +258,83 @@ public:
 	{
 		
 		return Student::info(os) << " " << get_subject();
-	}
-
+    }
 };
-
-
-
-class Filename :public std::string 
+	
+void Print(Human* group[], const int n)
 {
-	Filename()
+	for (int i = 0; i < n; i++)
 	{
-		this->c_str();
+		group[i]->info(cout);
+		cout << delimiter << endl;
 	}
-};
+	cout << "Количество объектов: " << group[0]->get_count() << endl;
+	cout << "Количество объектов: " << Human::get_count() << endl;
+}
+
+
+void Save(Human* group[], const int n, const std::string& filename)
+{
+	std::ofstream fout(filename);
+
+	for (int i = 0; i < n; i++)
+	{
+		fout << *group[i]<< endl;
+	}
+	fout.close();
+	std::string cmd = "start notepad ";
+	cmd += filename;
+	system(cmd.c_str());// метод c_str возвращает строку в виде массива символов (char*)
+}
+
+
+Human** Load(const std::string& filename, int& n)
+{
+	Human** group = nullptr;
+	std::ifstream fin(filename);
+	if (fin.is_open())
+	{
+		//1. подсчитываем количество объектов в файле
+		n = 0;
+		std::string buffer;
+		while (!fin.eof())
+		{
+			std::getline(fin, buffer);
+			if (buffer.size() < 20)continue;
+			n++;
+		}
+		cout << "Количество объектов: " << n << endl;
+		//2. выделяем память для объектов
+		group = new Human* [n];
+		//3. Возвращаемся в начало файлаб для того чтобы прочитать из него сами объекты.
+		cout << "Position " << fin.tellg() << endl; // метод tellg() возвращает текущую get  позицию курсора на чтение. -1 конец файла
+		fin.clear();
+		fin.seekg(0); //метод seekg(n) переводит get курсор на чтение в указанную позицию "n";
+		cout << "Position " << fin.tellg() << endl; // метод tellg() возвращает текущую get  позицию курсора на чтение. -1 конец файла
+
+
+	}
+	else
+	{
+		std::cerr << "Error: file not found" << endl;
+	}
+	// 4. закрываем файл
+	fin.close();
+	return group;
+}
+
+
+void Clear(Human* group[], const int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		delete group[i];
+		cout << delimiter << endl;
+	}
+}
 
 //#define INHERITANCE
-#define POLYMORPHISM
+//#define POLYMORPHISM
 void main()
 {
 	setlocale(LC_ALL, "");
@@ -292,6 +352,8 @@ void main()
 	teacher.info();
 #endif // INHERITANCE
 
+#ifdef POLYMORPHISM
+
 	Human* group[] =
 	{
 		new Student("Pincman", "Jessie", 22, "Chemistry", "WW_220", 95, 98),
@@ -301,22 +363,21 @@ void main()
 		new Teacher("Diaz", "Ricardo", 50, "Weapons distribution", 20)
 	};
 
-	std::ofstream fout("group.txt");
-	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
-	{
-		group[i]->info(cout);
-		fout << *group[i] << endl;
-		cout << delimiter << endl;
-	}
-	cout << "Количество объектов: " << group[0]->get_count() << endl;
-	cout << "Количество объектов: " << Human::get_count() << endl;
-	fout.close();
-	system("notepad group.txt");
+	Print(group, sizeof(group) / sizeof(group[0]));
+	Save(group, sizeof(group) / sizeof(group[0]), "group.txt");
 
 	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
 	{
 		delete group[i];
 		cout << delimiter << endl;
 	}
+
+#endif POLYMORPHISM
+
+		
+	int n = 0;
+	Human** group = Load("group.txt", n);
+	Print(group, n);
+	Clear(group, n);
 
 }
