@@ -70,6 +70,50 @@ public:
 		Shape::info();
 	}
 };
+class Triangle :public Shape
+{
+	double side;
+public:
+	Triangle(double side, Color color) :Shape(color)
+	{
+		set_side(side);
+	}
+	double get_side()const
+	{
+		return side;
+	}
+	void set_side(double side)
+	{
+		this->side = side;
+	}
+	double get_area()const override
+	{
+		double p = (3 * side) / 2;
+		return sqrt(p*(p-side)*(p-side)*(p-side));
+	}
+	double get_perimeter()const override
+	{
+		return 3 * side;
+	}
+	void draw()const override
+	{
+		for (int i = 1; i <= side; i++)
+		{
+			for (int j = 1; j < i; j++)cout << " ";
+			for (int j = 1; j <= side - i + 1; j++)cout << "* ";
+			cout << endl;
+		}
+		cout << endl;
+	}
+	void info() const override
+	{
+		cout << typeid(*this).name() << endl;
+		cout << "Длинна стороны треугольника: " << get_side() << endl;
+		Shape::info();
+	}
+
+	
+};
 
 void main()
 {
@@ -79,10 +123,18 @@ void main()
 	//Shape shape;
 	//Square square;
 	Square square(5, Color::Red);
-	cout << "Длинна стороны квадрата: " << square.get_side() << endl;
+	/*cout << "Длинна стороны квадрата: " << square.get_side() << endl;
 	cout << " Площадь квадрата: " << square.get_area() << endl;
 	cout << "Периметр квадрата: " << square.get_perimeter() << endl;
-	square.draw();
+	square.draw();*/
 	cout << "\n---------------------------------------\n" << endl;
 	square.info();
+
+	Triangle triangle(7, Color::Blue);
+	/*cout << "Длинна стороны треугольника: " << triangle.get_side() << endl;
+	cout << " Площадь треугольника: " << triangle.get_area() << endl;
+	cout << "Периметр треугольника: " << triangle.get_perimeter() << endl;
+	triangle.draw();*/
+	cout << "\n---------------------------------------\n" << endl;
+	triangle.info();
 }
