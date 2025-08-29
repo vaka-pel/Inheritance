@@ -170,6 +170,13 @@ namespace GEOMETRY
 		{
 			return (width + height) * 2;
 		}
+		
+		void info()const override
+		{
+			cout << typeid(*this).name() << endl;
+			cout << "Стороны: " << width << "x" << height << endl;
+			Shape::info();
+		}
 		void draw()const override
 		{
 			HWND hwnd = GetConsoleWindow(); //получаем окно консоли
@@ -187,12 +194,6 @@ namespace GEOMETRY
 
 			ReleaseDC(hwnd, hdc);
 
-		}
-		void info()const override
-		{
-			cout << typeid(*this).name() << endl;
-			cout << "Стороны: " << width << "x" << height << endl;
-			Shape::info();
 		}
 	};
 	class Square :public Rectangle
@@ -324,6 +325,8 @@ void main()
 	square.draw();
 	cout << "\n---------------------------------------\n" << endl;*/
 	square.info();
+
+	
 
 	GEOMETRY::Rectangle rect(150, 100, 150, 100, 2, GEOMETRY::Color::Orange);
 	rect.info();
